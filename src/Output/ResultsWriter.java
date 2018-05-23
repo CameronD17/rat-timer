@@ -1,6 +1,6 @@
 package Output;
 
-import Timer.Lap;
+import Timer.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -11,18 +11,20 @@ import java.util.List;
 public class ResultsWriter {
 
     private String FILENAME = ".." + File.separator + "results" + File.separator + "plusMaze";
+    //private String FILENAME = "results" + File.separator + "plusMaze";
     private int INITIAL_FILE_NUMBER = 0;
     private String EXTENSION = ".csv";
 
-    public void writeResultsToFile (List<Lap> movementLaps, List<Lap> groomingLaps, List<Lap> frozenLaps, int ratCount, boolean needsNewFile) {
+    public void writeResultsToFile (Timer timer, int ratCount, boolean needsNewFile) {
         File file = getCurrentFile(needsNewFile);
         try (FileWriter fileWriter = new FileWriter(file, true))
         {
             fileWriter.write(makeHeader(ratCount));
-            List<String> results = concatenateResults(movementLaps, groomingLaps, frozenLaps);
+            List<String> results = concatenateResults(timer.getMovementLaps(), timer.getGroomingLaps(), timer.getFrozenLaps());
             for (String result: results) {
                 fileWriter.write(result);
             }
+            fileWriter.write(makeEnd(timer.getStopTimeInSeconds()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,6 +48,10 @@ public class ResultsWriter {
         return "Rat " + ratNumber + ",Movement Time," +
                 "Grooming Position,Grooming Start,Grooming End," +
                 "Frozen Position,Frozen Start,Frozen End\n";
+    }
+
+    private String makeEnd (String stopTime) {
+        return "END," + stopTime + "\n";
     }
 
     private List<String> concatenateResults (List<Lap> movementLaps,

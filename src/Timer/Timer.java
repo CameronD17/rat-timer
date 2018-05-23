@@ -35,6 +35,11 @@ public class Timer {
     public List<Lap> getGroomingLaps () { return groomingLaps; }
     public List<Lap> getFrozenLaps () { return frozenLaps; }
 
+    public double getStartTime () { return startTime; }
+    public String getStartTimeInSeconds () { return Double.toString(getStartTime() / 1000); }
+    public double getStopTime () { return stopTime; }
+    public String getStopTimeInSeconds () { return Double.toString(getStopTime() / 1000); }
+
     public Position getCurrentPosition () {
         return movementLaps.get(movementLaps.size()-1).getCurrentPosition();
     }
@@ -59,7 +64,7 @@ public class Timer {
 
     public boolean startStop () {
         if (running) {
-            stopTime = System.currentTimeMillis();
+            stopTime = getCurrentTime();
             running = false;
         } else {
             startTime = System.currentTimeMillis();
@@ -105,11 +110,11 @@ public class Timer {
         if (isGrooming) {
             groomingLaps.get(groomingLaps.size()-1).stopLap(getCurrentTime());
             isGrooming = false;
-            System.out.println("Rat has stopped groomingLaps.");
+            System.out.println("Rat has stopped grooming.");
         } else {
             groomingLaps.add(new Lap(getCurrentTime(), getCurrentPosition()));
             isGrooming = true;
-            System.out.println("Rat has started groomingLaps.");
+            System.out.println("Rat has started grooming.");
         }
     }
 
@@ -121,11 +126,11 @@ public class Timer {
         } else {
             frozenLaps.add(new Lap(getCurrentTime(), getCurrentPosition()));
             isFrozen = true;
-            System.out.println("Rat is frozenLaps.");
+            System.out.println("Rat is frozen.");
         }
     }
 
     private double getCurrentTime () {
-        return System.currentTimeMillis() - startTime;
+        return (System.currentTimeMillis()  - startTime);
     }
 }

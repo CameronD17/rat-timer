@@ -130,11 +130,7 @@ public class RatTimer extends Application {
     }
 
     private void writeResultsAndResetTimer () {
-        resultsWriter.writeResultsToFile(timer.getMovementLaps(),
-                timer.getGroomingLaps(),
-                timer.getFrozenLaps(),
-                ratCount,
-                needsNewFile);
+        resultsWriter.writeResultsToFile(timer, ratCount, needsNewFile);
         timer.reset();
         needsNewFile = false;
         ratCount++;
