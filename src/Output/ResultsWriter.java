@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ResultsWriter {
 
-    private String FILENAME = "results" + File.separator + "plusMaze";
+    private String FILENAME = ".." + File.separator + "results" + File.separator + "plusMaze";
     private int INITIAL_FILE_NUMBER = 0;
     private String EXTENSION = ".csv";
 
