@@ -10,13 +10,13 @@ import java.util.List;
 
 public class ResultsWriter {
 
-    private String FILENAME = "results/plusMaze";
-    private int CURRENT_FILE_NUMBER = 1;
+    private String FILENAME = "results" + File.separator + "plusMaze";
+    private int INITIAL_FILE_NUMBER = 0;
     private String EXTENSION = ".csv";
 
     public void writeResultsToFile (List<Lap> movementLaps, List<Lap> groomingLaps, List<Lap> frozenLaps, int ratCount, boolean needsNewFile) {
-        CURRENT_FILE_NUMBER = getFileNumber(needsNewFile);
-        try (FileWriter fileWriter = new FileWriter(FILENAME + CURRENT_FILE_NUMBER + EXTENSION, true))
+        File file = getCurrentFile(needsNewFile);
+        try (FileWriter fileWriter = new FileWriter(file, true))
         {
             fileWriter.write(makeHeader(ratCount));
             List<String> results = concatenateResults(movementLaps, groomingLaps, frozenLaps);
@@ -28,15 +28,18 @@ public class ResultsWriter {
         }
     }
 
-    private int getFileNumber (boolean needsNewFile) {
-        int nextAvailableNumber = CURRENT_FILE_NUMBER;
-        File file = new File(FILENAME + nextAvailableNumber + EXTENSION);
+    private File getCurrentFile (boolean needsNewFile) {
+        File currentFile = new File(FILENAME + INITIAL_FILE_NUMBER + EXTENSION);
+        int nextAvailableNumber = INITIAL_FILE_NUMBER + 1;
+        File nextFile = new File(FILENAME + nextAvailableNumber + EXTENSION);
 
-        while (file.exists()){
+        while (nextFile.exists()){
+            currentFile = nextFile;
             nextAvailableNumber++;
-            file = new File(FILENAME + nextAvailableNumber + EXTENSION);
+            nextFile = new File(FILENAME + nextAvailableNumber + EXTENSION);
         }
-        return needsNewFile ? nextAvailableNumber : nextAvailableNumber - 1;
+
+        return needsNewFile ? nextFile : currentFile;
     }
 
     private String makeHeader (int ratNumber) {
